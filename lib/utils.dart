@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'dart:ui';
 
-int randomInt(int max) {
-  return Random().nextInt(max);
+double getRandomDouble() {
+  return Random().nextDouble();
 }
 
-double randomDouble(int max) {
-  return Random().nextInt(max).toDouble();
+double getAngle() {
+  return lerpDouble(0, 360, getRandomDouble())!;
 }
