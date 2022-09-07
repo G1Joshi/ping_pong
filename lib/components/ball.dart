@@ -39,10 +39,16 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
     super.onCollisionStart(intersectionPoints, other);
     if (other is ScreenHitbox) {
       final collision = intersectionPoints.first;
-      if (collision.x == 0) speed.x = -speed.x;
-      if (collision.y == 0) speed.y = -speed.y;
-      if (collision.x == gameRef.size.x) speed.x = -speed.x;
-      if (collision.y == gameRef.size.y) speed.y = -speed.y;
+      if (collision.x == 0 || collision.x == gameRef.size.x) {
+        speed.x = -speed.x;
+      }
+      if (collision.y == 0 || collision.y == gameRef.size.y) {
+        speed.y = -speed.y;
+      }
+    }
+    if (other is Ball) {
+      speed.x = -speed.x;
+      speed.y = -speed.y;
     }
   }
 }

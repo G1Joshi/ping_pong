@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
         body: Home(),
       ),
@@ -20,16 +20,12 @@ class MyApp extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
-  Home({super.key});
-
-  final game = MyGame();
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GameWidget(
-        game: game,
-      ),
+    return GameWidget(
+      game: MyGame(),
     );
   }
 }

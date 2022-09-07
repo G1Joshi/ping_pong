@@ -12,6 +12,11 @@ class MyGame extends FlameGame with HasCollisionDetection {
     add(Background(await loadSprite('bg.jpg'), size));
     add(ScreenHitbox());
     add(Ball(Colors.red, 20));
+    add(Ball(Colors.orange, 20));
+    add(Ball(Colors.yellow, 20));
     add(Ball(Colors.green, 20));
+    add(Ball(Colors.blue, 20));
+    add(Ball(Colors.indigo, 20));
+    add(Ball(Colors.purple, 20));
   }
 }
