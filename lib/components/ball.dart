@@ -1,24 +1,24 @@
-import 'dart:math' as math;
-import 'dart:ui';
+import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
 
 import '../utils.dart';
+import 'bat.dart';
 
 class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
-  Ball(Color color, double radius) {
-    paint = Paint()..color = color;
-    this.radius = radius;
-  }
-
   late Vector2 speed;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
     start();
-    add(CircleHitbox(radius: radius));
+    radius = 20.0;
+    anchor = Anchor.center;
+    add(CircleHitbox()
+      ..renderShape = true
+      ..setColor(Colors.red));
   }
 
   @override
@@ -29,8 +29,8 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
 
   void start() {
     position = gameRef.size / 2;
-    final v1 = math.sin(getAngle()) * 400;
-    final v2 = math.cos(getAngle()) * 400;
+    final v1 = sin(getAngle()) * 500;
+    final v2 = cos(getAngle()) * 500;
     speed = Vector2(v1, v2);
   }
 
@@ -42,11 +42,14 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
       if (collision.x == 0 || collision.x == gameRef.size.x) {
         speed.x = -speed.x;
       }
-      if (collision.y == 0 || collision.y == gameRef.size.y) {
+      if (collision.y == 0) {
         speed.y = -speed.y;
       }
+      if (collision.y == gameRef.size.y) {
+        start();
+      }
     }
-    if (other is Ball) {
+    if (other is Bat) {
       speed.x = -speed.x;
       speed.y = -speed.y;
     }
