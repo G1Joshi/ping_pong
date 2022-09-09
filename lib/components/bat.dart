@@ -7,7 +7,7 @@ class Bat extends RectangleComponent with HasGameRef, CollisionCallbacks {
   Future<void> onLoad() async {
     super.onLoad();
     position = Vector2(gameRef.size[0] / 2, gameRef.size[1] / 1.1);
-    size = Vector2(gameRef.size[0] / 2, gameRef.size[1] / 64);
+    size = Vector2(gameRef.size[0] / 3, gameRef.size[1] / 64);
     anchor = Anchor.center;
     add(RectangleHitbox()
       ..renderShape = true

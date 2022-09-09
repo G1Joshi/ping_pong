@@ -8,7 +8,8 @@ import '../utils.dart';
 import 'bat.dart';
 
 class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
-  late Vector2 speed;
+  late Vector2 velocity;
+  final int speed = 400;
 
   @override
   Future<void> onLoad() async {
@@ -24,14 +25,14 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
   @override
   void update(dt) {
     super.update(dt);
-    position += speed * dt;
+    position += velocity * dt;
   }
 
   void start() {
     position = gameRef.size / 2;
-    final v1 = sin(getAngle()) * 500;
-    final v2 = cos(getAngle()) * 500;
-    speed = Vector2(v1, v2);
+    final v1 = sin(getAngle()) * speed;
+    final v2 = cos(getAngle()) * speed;
+    velocity = Vector2(v1, v2);
   }
 
   @override
@@ -40,18 +41,18 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
     if (other is ScreenHitbox) {
       final collision = intersectionPoints.first;
       if (collision.x == 0 || collision.x == gameRef.size.x) {
-        speed.x = -speed.x;
+        velocity.x = -velocity.x;
       }
       if (collision.y == 0) {
-        speed.y = -speed.y;
+        velocity.y = -velocity.y;
       }
       if (collision.y == gameRef.size.y) {
         start();
       }
     }
     if (other is Bat) {
-      speed.x = -speed.x;
-      speed.y = -speed.y;
+      velocity.x = -velocity.x * 1.1;
+      velocity.y = -velocity.y * 1.1;
     }
   }
 }
