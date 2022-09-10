@@ -6,30 +6,36 @@ import 'package:flutter/services.dart';
 
 import 'components/background.dart';
 import 'components/ball.dart';
-import 'events/draggable_bat.dart';
+import 'components/bat.dart';
+import 'components/score.dart';
 
-class MyGame extends FlameGame
-    with HasCollisionDetection, HasDraggables, KeyboardEvents {
+class MyGame extends FlameGame with HasCollisionDetection, KeyboardEvents {
   late final int speed;
   late final Vector2 velocity1;
   late final Vector2 velocity2;
-  late final DraggableBat bat1;
-  late final DraggableBat bat2;
+  late final Bat bat1;
+  late final Bat bat2;
+  late final Score player1;
+  late final Score player2;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    speed = 400;
-    velocity1 = Vector2(0, 0);
-    velocity2 = Vector2(0, 0);
-    bat1 = DraggableBat.top(size);
-    bat2 = DraggableBat.down(size);
-    add(Background(await loadSprite('bg.jpg'), size));
+    speed = 500;
+    velocity1 = Vector2.zero();
+    velocity2 = Vector2.zero();
+    bat1 = Bat.top(size);
+    bat2 = Bat.down(size);
+    player1 = Score.right();
+    player2 = Score.left();
     addAll([
+      Background(await loadSprite('bg.jpg'), size),
       ScreenHitbox(),
       Ball(),
       bat1,
       bat2,
+      player1,
+      player2,
     ]);
   }
 

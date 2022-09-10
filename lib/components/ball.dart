@@ -4,10 +4,12 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import '../game.dart';
 import '../utils.dart';
 import 'bat.dart';
+import 'game_over.dart';
 
-class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
+class Ball extends CircleComponent with HasGameRef<MyGame>, CollisionCallbacks {
   late Vector2 velocity;
   late int speed;
 
@@ -44,13 +46,26 @@ class Ball extends CircleComponent with HasGameRef, CollisionCallbacks {
       if (collision.x == 0 || collision.x == gameRef.size.x) {
         velocity.x = -velocity.x;
       }
-      if (collision.y == 0 || collision.y == gameRef.size.y) {
-        start();
+      if (collision.y == 0) {
+        gameRef.player2.score++;
+        if (gameRef.player2.score == 3) {
+          gameRef.add(GameOver('Player 2 Won'));
+        } else {
+          start();
+        }
+      }
+      if (collision.y == gameRef.size.y) {
+        gameRef.player1.score++;
+        if (gameRef.player1.score == 3) {
+          gameRef.add(GameOver('Player 1 Won'));
+        } else {
+          start();
+        }
       }
     }
     if (other is Bat) {
-      velocity.x = -velocity.x;
-      velocity.y = -velocity.y;
+      velocity.x = -velocity.x * 1.01;
+      velocity.y = -velocity.y * 1.01;
     }
   }
 }

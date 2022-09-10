@@ -20,10 +20,4 @@ class Bat extends RectangleComponent with CollisionCallbacks {
       ..renderShape = true
       ..setColor(Colors.blue));
   }
-
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
-    add(RectangleHitbox());
-  }
 }
