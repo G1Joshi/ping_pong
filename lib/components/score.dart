@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Score extends TextComponent with HasGameRef {
@@ -7,7 +8,7 @@ class Score extends TextComponent with HasGameRef {
       : player = 1,
         paint = TextPaint(
           style: const TextStyle(
-            fontSize: 30,
+            fontSize: kIsWeb ? 60 : 30,
             color: Colors.blue,
             fontWeight: FontWeight.w900,
           ),
@@ -16,7 +17,7 @@ class Score extends TextComponent with HasGameRef {
       : player = 2,
         paint = TextPaint(
           style: const TextStyle(
-            fontSize: 30,
+            fontSize: kIsWeb ? 60 : 30,
             color: Colors.green,
             fontWeight: FontWeight.w900,
           ),
@@ -28,10 +29,17 @@ class Score extends TextComponent with HasGameRef {
 
   @override
   void onGameResize(Vector2 size) {
-    position.setValues(
-      player == 1 ? 20 : gameRef.size.x - 20,
-      gameRef.size.y / 2,
-    );
+    if (kIsWeb) {
+      position.setValues(
+        player == 1 ? gameRef.size.x / 3 : gameRef.size.x / 1.5,
+        40,
+      );
+    } else {
+      position.setValues(
+        player == 1 ? 20 : gameRef.size.x - 20,
+        gameRef.size.y / 2,
+      );
+    }
     super.onGameResize(size);
   }
 

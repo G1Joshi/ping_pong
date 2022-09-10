@@ -2,27 +2,39 @@ import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../game.dart';
 import '../utils.dart';
 import 'bat.dart';
-import 'game_over.dart';
+import 'message.dart';
 
-class Ball extends CircleComponent with HasGameRef<MyGame>, CollisionCallbacks {
-  late Vector2 velocity;
+class Ball extends CircleComponent
+    with HasGameRef<MyGame>, CollisionCallbacks, Tappable {
+  bool isGameStarted = false;
+  Vector2 velocity = Vector2.zero();
   late int speed;
+  Message? message;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    speed = 500;
-    radius = 15.0;
+    message = Message('Tap on ball to play');
+    gameRef.add(message!);
+    speed = kIsWeb ? 600 : 500;
+    radius = kIsWeb ? 20 : 15;
     anchor = Anchor.center;
-    start();
+    position = gameRef.size / 2;
     add(CircleHitbox()
       ..renderShape = true
       ..setColor(Colors.red));
+  }
+
+  @override
+  bool onTapDown(info) {
+    start();
+    return true;
   }
 
   @override
@@ -32,10 +44,21 @@ class Ball extends CircleComponent with HasGameRef<MyGame>, CollisionCallbacks {
   }
 
   void start() {
+    if (message != null) {
+      gameRef.remove(message!);
+      message = null;
+    }
+    isGameStarted = true;
     position = gameRef.size / 2;
     final v1 = sin(getAngle()) * speed;
     final v2 = cos(getAngle()) * speed;
     velocity = Vector2(v1, v2);
+  }
+
+  void reset() {
+    gameRef.player1.score = 0;
+    gameRef.player2.score = 0;
+    start();
   }
 
   @override
@@ -43,23 +66,53 @@ class Ball extends CircleComponent with HasGameRef<MyGame>, CollisionCallbacks {
     super.onCollisionStart(intersectionPoints, other);
     if (other is ScreenHitbox) {
       final collision = intersectionPoints.first;
-      if (collision.x == 0 || collision.x == gameRef.size.x) {
-        velocity.x = -velocity.x;
-      }
-      if (collision.y == 0) {
-        gameRef.player2.score++;
-        if (gameRef.player2.score == 3) {
-          gameRef.add(GameOver('Player 2 Won'));
-        } else {
-          start();
+      if (kIsWeb) {
+        if (collision.y == 0 || collision.y == gameRef.size.y) {
+          velocity.y = -velocity.y;
         }
-      }
-      if (collision.y == gameRef.size.y) {
-        gameRef.player1.score++;
-        if (gameRef.player1.score == 3) {
-          gameRef.add(GameOver('Player 1 Won'));
-        } else {
-          start();
+        if (collision.x == 0) {
+          gameRef.player2.score++;
+          if (gameRef.player2.score == 3) {
+            isGameStarted = false;
+            message = Message('Player 2 Won\nPress enter/space to replay');
+            gameRef.add(message!);
+          } else {
+            start();
+          }
+        }
+        if (collision.x == gameRef.size.x) {
+          gameRef.player1.score++;
+          if (gameRef.player1.score == 3) {
+            isGameStarted = false;
+            message = Message('Player 1 Won\nPress enter/space to replay');
+            gameRef.add(message!);
+          } else {
+            start();
+          }
+        }
+      } else {
+        if (collision.x == 0 || collision.x == gameRef.size.x) {
+          velocity.x = -velocity.x;
+        }
+        if (collision.y == 0) {
+          gameRef.player2.score++;
+          if (gameRef.player2.score == 3) {
+            isGameStarted = false;
+            message = Message('Player 2 Won\nPress enter/space to replay');
+            gameRef.add(message!);
+          } else {
+            start();
+          }
+        }
+        if (collision.y == gameRef.size.y) {
+          gameRef.player1.score++;
+          if (gameRef.player1.score == 3) {
+            isGameStarted = false;
+            message = Message('Player 1 Won\nPress enter/space to replay');
+            gameRef.add(message!);
+          } else {
+            start();
+          }
         }
       }
     }

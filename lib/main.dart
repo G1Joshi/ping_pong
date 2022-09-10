@@ -25,8 +25,10 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(
-      game: MyGame(),
+    return SafeArea(
+      child: GameWidget(
+        game: MyGame(),
+      ),
     );
   }
 }
