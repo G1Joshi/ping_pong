@@ -20,7 +20,14 @@ class Ball extends CircleComponent
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    message = Message('Tap on ball to play');
+    if (kIsWeb) {
+      message = Message(
+          'Tap on the Ball to Play\nPlayer 1: Use W/S Keys to Play\nPlayer 2: Use ArrowUp/ArrowDown Keys to Play');
+    } else {
+      message = Message(
+          'Tap on the Ball to Play\nPlayer 1: Use A/D Keys to Play\nPlayer 2: Use ArrowLeft/ArrowRight Keys to Play');
+    }
+
     gameRef.add(message!);
     speed = kIsWeb ? 600 : 500;
     radius = kIsWeb ? 20 : 15;
@@ -74,7 +81,7 @@ class Ball extends CircleComponent
           gameRef.player2.score++;
           if (gameRef.player2.score == 3) {
             isGameStarted = false;
-            message = Message('Player 2 Won\nPress enter/space to replay');
+            message = Message('Player 2 Won\nPress enter/space to Replay');
             gameRef.add(message!);
           } else {
             start();
@@ -84,7 +91,7 @@ class Ball extends CircleComponent
           gameRef.player1.score++;
           if (gameRef.player1.score == 3) {
             isGameStarted = false;
-            message = Message('Player 1 Won\nPress enter/space to replay');
+            message = Message('Player 1 Won\nPress enter/space to Replay');
             gameRef.add(message!);
           } else {
             start();
@@ -98,7 +105,7 @@ class Ball extends CircleComponent
           gameRef.player2.score++;
           if (gameRef.player2.score == 3) {
             isGameStarted = false;
-            message = Message('Player 2 Won\nPress enter/space to replay');
+            message = Message('Player 2 Won\nPress enter/space to Replay');
             gameRef.add(message!);
           } else {
             start();
