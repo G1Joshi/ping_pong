@@ -1,10 +1,8 @@
 import 'dart:math';
-import 'dart:ui';
 
-double getRandomDouble() {
-  return Random().nextDouble();
-}
+import 'package:flutter/foundation.dart';
 
-double getAngle() {
-  return lerpDouble(0, 360, getRandomDouble())!;
+double get getRandom {
+  final angle = Random().nextInt(100) + (kIsWeb ? 600 : 400);
+  return angle.toDouble();
 }

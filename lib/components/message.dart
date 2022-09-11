@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Message extends TextComponent with HasGameRef {
@@ -7,7 +8,7 @@ class Message extends TextComponent with HasGameRef {
     anchor = Anchor.center;
     textRenderer = TextPaint(
       style: const TextStyle(
-        fontSize: 30,
+        fontSize: kIsWeb ? 32 : 16,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),

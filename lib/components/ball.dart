@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/foundation.dart';
@@ -12,9 +10,8 @@ import 'message.dart';
 
 class Ball extends CircleComponent
     with HasGameRef<MyGame>, CollisionCallbacks, Tappable {
-  bool isGameStarted = false;
-  Vector2 velocity = Vector2.zero();
-  late int speed;
+  late bool isGameStarted;
+  late Vector2 velocity;
   Message? message;
 
   @override
@@ -27,9 +24,9 @@ class Ball extends CircleComponent
       message = Message(
           'Tap on the Ball to Play\nPlayer 1: Use A/D Keys to Play\nPlayer 2: Use ArrowLeft/ArrowRight Keys to Play');
     }
-
     gameRef.add(message!);
-    speed = kIsWeb ? 600 : 500;
+    isGameStarted = false;
+    velocity = Vector2.zero();
     radius = kIsWeb ? 20 : 15;
     anchor = Anchor.center;
     position = gameRef.size / 2;
@@ -57,9 +54,7 @@ class Ball extends CircleComponent
     }
     isGameStarted = true;
     position = gameRef.size / 2;
-    final v1 = sin(getAngle()) * speed;
-    final v2 = cos(getAngle()) * speed;
-    velocity = Vector2(v1, v2);
+    velocity = Vector2(getRandom, getRandom);
   }
 
   void reset() {
@@ -124,8 +119,17 @@ class Ball extends CircleComponent
       }
     }
     if (other is Bat) {
-      velocity.x = -velocity.x * 1.01;
-      velocity.y = -velocity.y * 1.01;
+      if (kIsWeb) {
+        final list = [-velocity.y, velocity.y];
+        list.shuffle();
+        velocity.y = list.first * 1.01;
+        velocity.x = -velocity.x * 1.01;
+      } else {
+        final list = [-velocity.x, velocity.x];
+        list.shuffle();
+        velocity.x = list.first * 1.01;
+        velocity.y = -velocity.y * 1.01;
+      }
     }
   }
 }

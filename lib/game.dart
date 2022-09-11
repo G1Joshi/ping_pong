@@ -1,4 +1,3 @@
-import 'package:ball_collision/components/background.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'components/background.dart';
 import 'components/ball.dart';
 import 'components/bat.dart';
 import 'components/score.dart';

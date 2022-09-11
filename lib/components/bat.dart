@@ -13,7 +13,7 @@ class Bat extends RectangleComponent
   Bat.top(Vector2 gameSize) {
     if (kIsWeb) {
       position = Vector2(gameSize[0] - 20, gameSize[1] / 2);
-      size = Vector2(gameSize[1] / 64, gameSize[0] / 5);
+      size = Vector2(gameSize[0] / 128, gameSize[1] / 5);
     } else {
       position = Vector2(gameSize[0] / 2, gameSize[1] - 25);
       size = Vector2(gameSize[0] / 3, gameSize[1] / 64);
@@ -27,7 +27,7 @@ class Bat extends RectangleComponent
   Bat.down(Vector2 gameSize) {
     if (kIsWeb) {
       position = Vector2(20, gameSize[1] / 2);
-      size = Vector2(gameSize[1] / 64, gameSize[0] / 5);
+      size = Vector2(gameSize[0] / 128, gameSize[1] / 5);
     } else {
       position = Vector2(gameSize[0] / 2, 25);
       size = Vector2(gameSize[0] / 3, gameSize[1] / 64);
