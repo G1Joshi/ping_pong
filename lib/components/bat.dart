@@ -11,6 +11,15 @@ class Bat extends RectangleComponent
   bool isBeforeSpaceAvailable = true;
   bool isAfterSpaceAvailable = true;
 
+  Bat.solo(Vector2 gameSize) {
+    position = Vector2(gameSize[0] / 2, gameSize[1] - 25);
+    size = Vector2(gameSize[0] / 4, gameSize[1] / 64);
+    anchor = Anchor.center;
+    add(RectangleHitbox()
+      ..renderShape = true
+      ..setColor(Colors.green));
+  }
+
   Bat.top(Vector2 gameSize, mode) {
     if (mode == GameMode.multiple) {
       position = Vector2(gameSize[0] - 20, gameSize[1] / 2);

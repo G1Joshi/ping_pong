@@ -1,25 +1,28 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'components/background.dart';
-import 'components/foreground.dart';
 import 'components/ball.dart';
 import 'components/banner.dart';
 import 'components/bat.dart';
+import 'components/draggable.dart';
+import 'components/foreground.dart';
 import 'components/score.dart';
 import 'utils.dart';
 
 class MyGame extends FlameGame
-    with HasCollisionDetection, HasTappables, KeyboardEvents {
+    with HasCollisionDetection, HasTappables, HasDraggables, KeyboardEvents {
   bool isGameStarted = false;
   int speed = 0;
   int miss = 0;
   late Foreground foreground = Foreground();
   late Vector2 velocity1;
   late Vector2 velocity2;
+  Bat? bat;
   Bat? bat1;
   Bat? bat2;
   Score? points;
@@ -38,7 +41,27 @@ class MyGame extends FlameGame
     addAll([
       Background(),
       ScreenHitbox(),
-      banner,
+    ]);
+    if (kIsWeb) {
+      add(banner);
+    } else {
+      solo();
+    }
+  }
+
+  solo() {
+    speed = 600;
+    mode = GameMode.single;
+    foreground = Foreground();
+    ball = Ball();
+    bat = DraggableBat.solo(size);
+    points = Score.mid(mode);
+    if (kIsWeb) remove(banner);
+    addAll([
+      foreground,
+      ball,
+      bat!,
+      points!,
     ]);
   }
 
@@ -49,7 +72,7 @@ class MyGame extends FlameGame
     ball = Ball();
     bat1 = Bat.top(size, mode);
     points = Score.mid(mode);
-    remove(banner);
+    if (kIsWeb) remove(banner);
     addAll([
       foreground,
       ball,
@@ -67,7 +90,7 @@ class MyGame extends FlameGame
     bat2 = Bat.down(size, mode);
     player1 = Score.right(mode);
     player2 = Score.left(mode);
-    remove(banner);
+    if (kIsWeb) remove(banner);
     addAll([
       foreground,
       ball,

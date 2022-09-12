@@ -1,7 +1,7 @@
 import 'dart:math';
 
 double get getRandom {
-  final angle = Random().nextInt(100) + (600);
+  final angle = Random().nextInt(100) + 450;
   return angle.toDouble();
 }
 
