@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-
 double get getRandom {
-  final angle = Random().nextInt(100) + (kIsWeb ? 600 : 400);
+  final angle = Random().nextInt(100) + (600);
   return angle.toDouble();
 }
+
+enum GameMode { single, multiple }

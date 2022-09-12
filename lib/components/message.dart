@@ -1,14 +1,15 @@
 import 'package:flame/components.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class Message extends TextComponent with HasGameRef {
+import '../game.dart';
+
+class Message extends TextComponent with HasGameRef<MyGame> {
   Message(msg) {
     text = '$msg';
     anchor = Anchor.center;
     textRenderer = TextPaint(
       style: const TextStyle(
-        fontSize: kIsWeb ? 32 : 16,
+        fontSize: 30,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),

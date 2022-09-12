@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../game.dart';
@@ -10,24 +9,21 @@ import 'message.dart';
 
 class Ball extends CircleComponent
     with HasGameRef<MyGame>, CollisionCallbacks, Tappable {
-  late bool isGameStarted;
-  late Vector2 velocity;
+  Vector2 velocity = Vector2.zero();
   Message? message;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    if (kIsWeb) {
+    if (gameRef.mode == GameMode.multiple) {
       message = Message(
-          'Tap on the Ball to Play\nPlayer 1: Use W/S Keys to Play\nPlayer 2: Use ArrowUp/ArrowDown Keys to Play');
+          'Tap on the ball to play\nPlayer 1: Use W/S keys to play\nPlayer 2: Use ArrowUp/ArrowDown keys to play');
     } else {
       message = Message(
-          'Tap on the Ball to Play\nPlayer 1: Use A/D Keys to Play\nPlayer 2: Use ArrowLeft/ArrowRight Keys to Play');
+          'Tap on the ball to play\nUse ArrowLeft/ArrowRight keys to play');
     }
     gameRef.add(message!);
-    isGameStarted = false;
-    velocity = Vector2.zero();
-    radius = kIsWeb ? 20 : 15;
+    radius = 20;
     anchor = Anchor.center;
     position = gameRef.size / 2;
     add(CircleHitbox()
@@ -52,14 +48,18 @@ class Ball extends CircleComponent
       gameRef.remove(message!);
       message = null;
     }
-    isGameStarted = true;
+    gameRef.isGameStarted = true;
     position = gameRef.size / 2;
-    velocity = Vector2(getRandom, getRandom);
+    final list = [-getRandom, getRandom, getRandom, -getRandom];
+    list.shuffle();
+    velocity = Vector2(list.first, list.last);
   }
 
-  void reset() {
-    gameRef.player1.score = 0;
-    gameRef.player2.score = 0;
+  void replay() {
+    gameRef.miss = 0;
+    gameRef.points?.score = 0;
+    gameRef.player1?.score = 0;
+    gameRef.player2?.score = 0;
     start();
   }
 
@@ -68,25 +68,27 @@ class Ball extends CircleComponent
     super.onCollisionStart(intersectionPoints, other);
     if (other is ScreenHitbox) {
       final collision = intersectionPoints.first;
-      if (kIsWeb) {
+      if (gameRef.mode == GameMode.multiple) {
         if (collision.y == 0 || collision.y == gameRef.size.y) {
           velocity.y = -velocity.y;
         }
         if (collision.x == 0) {
-          gameRef.player2.score++;
-          if (gameRef.player2.score == 3) {
-            isGameStarted = false;
-            message = Message('Player 2 Won\nPress enter/space to Replay');
+          gameRef.player2?.score++;
+          if (gameRef.player2?.score == 3) {
+            gameRef.isGameStarted = false;
+            message = Message(
+                'Player 2 Won\nPress space to replay\nPress enter for main menu');
             gameRef.add(message!);
           } else {
             start();
           }
         }
         if (collision.x == gameRef.size.x) {
-          gameRef.player1.score++;
-          if (gameRef.player1.score == 3) {
-            isGameStarted = false;
-            message = Message('Player 1 Won\nPress enter/space to Replay');
+          gameRef.player1?.score++;
+          if (gameRef.player1?.score == 3) {
+            gameRef.isGameStarted = false;
+            message = Message(
+                'Player 2 Won\nPress space to replay\nPress enter for main menu');
             gameRef.add(message!);
           } else {
             start();
@@ -97,20 +99,14 @@ class Ball extends CircleComponent
           velocity.x = -velocity.x;
         }
         if (collision.y == 0) {
-          gameRef.player2.score++;
-          if (gameRef.player2.score == 3) {
-            isGameStarted = false;
-            message = Message('Player 2 Won\nPress enter/space to Replay');
-            gameRef.add(message!);
-          } else {
-            start();
-          }
+          velocity.y = -velocity.y;
         }
         if (collision.y == gameRef.size.y) {
-          gameRef.player1.score++;
-          if (gameRef.player1.score == 3) {
-            isGameStarted = false;
-            message = Message('Player 1 Won\nPress enter/space to replay');
+          gameRef.miss++;
+          if (gameRef.miss == 3) {
+            gameRef.isGameStarted = false;
+            message = Message(
+                'Game over. Your score: ${gameRef.points?.score}\nPress space to replay\nPress enter for main menu');
             gameRef.add(message!);
           } else {
             start();
@@ -119,7 +115,7 @@ class Ball extends CircleComponent
       }
     }
     if (other is Bat) {
-      if (kIsWeb) {
+      if (gameRef.mode == GameMode.multiple) {
         final list = [-velocity.y, velocity.y];
         list.shuffle();
         velocity.y = list.first * 1.01;
